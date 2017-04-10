@@ -48,12 +48,16 @@ class ZipkinDjangoRequestParser(object):
 
 
 class ZipkinMiddleware(MiddlewareMixin):
-    def __init__(self, store=None, api=None, get_response=None):
+    def __init__(self, get_response=None):
         self.store = ThreadLocalDataStore()
         self.request_parser = ZipkinDjangoRequestParser()
         self.id_generator = SimpleIdGenerator()
-        self.api = api or default_api
+        self.api = default_api
         self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
 
     def process_request(self, request):
         try:

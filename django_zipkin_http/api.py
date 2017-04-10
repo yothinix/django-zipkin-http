@@ -101,9 +101,7 @@ class ZipkinApi(object):
         )
 
     def _build_annotation(self, value):
-        if isinstance(value, unicode):
-            value = value.encode('utf-8')
-        return Annotation(self.endpoint, time.time() * 1000 * 1000, str(value))
+        return Annotation(self.endpoint, time.time() * 1000 * 1000, value)
 
     def _build_binary_annotation(self, key, value):
         return BinaryAnnotation(self.endpoint, key, value)

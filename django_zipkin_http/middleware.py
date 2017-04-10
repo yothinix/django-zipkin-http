@@ -3,7 +3,7 @@ import django
 import json
 from .span.constants import SERVER_RECV, SERVER_SEND
 from .zipkin_data import ZipkinData, ZipkinId
-from .data_store import ThreadLocalDataStore
+from .data_store import default as default_store
 from .id_generator import SimpleIdGenerator
 from .api import api as default_api
 from django_zipkin_http import constants
@@ -49,15 +49,11 @@ class ZipkinDjangoRequestParser(object):
 
 class ZipkinMiddleware(MiddlewareMixin):
     def __init__(self, get_response=None):
-        self.store = ThreadLocalDataStore()
+        self.store = default_store
         self.request_parser = ZipkinDjangoRequestParser()
         self.id_generator = SimpleIdGenerator()
         self.api = default_api
         self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        return response
 
     def process_request(self, request):
         try:

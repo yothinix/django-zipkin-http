@@ -22,7 +22,7 @@ from .span.span import Span
 
 class ZipkinApi(object):
     def __init__(self, store=None, service_name=None, ipv4=None):
-        self.store = store or default_store
+        self.store = default_store
         self.service_name = service_name or settings.ZIPKIN_SERVICE_NAME
         self.endpoint = Endpoint()
 
@@ -47,12 +47,12 @@ class ZipkinApi(object):
         span["name"] = span_instance.name
         span["traceId"] = str(span_instance.trace_id)
         span["binaryAnnotations"] = [{"key": each_bin.key, "value": str(each_bin.value), "endpoint": self._build_json_endpoint(each_bin.endpoint)} for each_bin in span_instance.binary_annotations]
-        span["annotations"] = [{"value": each_anno.value, "timestamp":each_anno.timestamp, "endpoint": self._build_json_endpoint(each_anno.endpoint)} for each_anno in span_instance.annotations]
+        span["annotations"] = [{"value": each_anno.value, "timestamp": int(each_anno.timestamp), "endpoint": self._build_json_endpoint(each_anno.endpoint)} for each_anno in span_instance.annotations]
         sr_time = span_instance.annotations[0].timestamp
         ss_time = span_instance.annotations[1].timestamp
-        span["duration"] = ss_time - sr_time
+        span["duration"] = int(ss_time - sr_time)
         span["id"] = span_instance.span_id
-        span["timestamp"] = sr_time
+        span["timestamp"] = int(sr_time)
         return [span]
 
     def report_json_to_zipkin(self):

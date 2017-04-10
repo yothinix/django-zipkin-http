@@ -6,17 +6,17 @@ import logging
 import json
 import threading
 
-from thrift.protocol import TBinaryProtocol
-from thrift.transport import TTransport
+from thriftpy.protocol import TBinaryProtocol
+from thriftpy.transport import TTransportBase
 
-import constants
-import defaults as settings
-from data_store import default as default_store
-from zipkin_http import HTTPReporter
-from span.endpoint import Endpoint
-from span.annotation import Annotation
-from span.binary_annotation import BinaryAnnotation
-from span.span import Span
+from django_zipkin_http import constants
+from django_zipkin_http import defaults as settings
+from .data_store import default as default_store
+from .zipkin_http import HTTPReporter
+from .span.endpoint import Endpoint
+from .span.annotation import Annotation
+from .span.binary_annotation import BinaryAnnotation
+from .span.span import Span
 
 
 
@@ -25,7 +25,7 @@ class ZipkinApi(object):
         self.store = store or default_store
         self.service_name = service_name or settings.ZIPKIN_SERVICE_NAME
         self.endpoint = Endpoint()
-    
+
     def set_endpoint(self, ipv4=None):
         self.endpoint = Endpoint(
             ipv4=ipv4,
@@ -97,7 +97,7 @@ class ZipkinApi(object):
             parent_id=zipkin_data.parent_span_id.get_binary() if zipkin_data.parent_span_id is not None else None,
             annotations=self.store.get_annotations(),
             binary_annotations=self.store.get_binary_annotations(),
-            span_id=zipkin_data.span_id.get_binary()            
+            span_id=zipkin_data.span_id.get_binary()
         )
 
     def _build_annotation(self, value):
@@ -112,7 +112,7 @@ class ZipkinApi(object):
     def _build_json_endpoint(endpoint, keys=["ipv4", "serviceName"]):
         endpoint_dict = {}
         for key in keys:
-            endpoint_dict[key] = getattr(endpoint, key)                    
+            endpoint_dict[key] = getattr(endpoint, key)
         return endpoint_dict
 
 

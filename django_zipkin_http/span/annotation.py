@@ -1,4 +1,4 @@
-from endpoint import Endpoint
+from .endpoint import Endpoint
 
 
 

@@ -1,14 +1,14 @@
 import logging
 import django
 import json
-from span.constants import SERVER_RECV, SERVER_SEND
-from zipkin_data import ZipkinData, ZipkinId
-from data_store import default as default_data_store
-from id_generator import SimpleIdGenerator
-from api import api as default_api
-import constants
-import defaults as settings
-import zipkin_http
+from .span.constants import SERVER_RECV, SERVER_SEND
+from .zipkin_data import ZipkinData, ZipkinId
+from .data_store import default as default_data_store
+from .id_generator import SimpleIdGenerator
+from .api import api as default_api
+from django_zipkin_http import constants
+from django_zipkin_http import defaults as settings
+from django_zipkin_http import zipkin_http
 
 
 if django.VERSION[0] == 1 and django.VERSION[1] < 5:
@@ -41,7 +41,7 @@ class ZipkinDjangoRequestParser(object):
             trace_id=ZipkinId.from_hex(request.META.get(self.trace_id_hdr_name, None)),
             span_id=ZipkinId.from_hex(request.META.get(self.span_id_hdr_name, None)),
             parent_span_id=ZipkinId.from_hex(request.META.get(self.parent_span_id_hdr_name, None)),
-            sampled=request.META.get(self.sampled_hdr_name, 'false') == 'true',            
+            sampled=request.META.get(self.sampled_hdr_name, 'false') == 'true',
             flags=request.META.get(self.flags_hdr_name, '0') == '1'
         )
 

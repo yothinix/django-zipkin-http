@@ -1,11 +1,11 @@
 import threading
 import functools
 
-from utils import import_class
-import defaults as settings
-from zipkin_data import ZipkinData
-from span.annotation import Annotation
-from span.binary_annotation import BinaryAnnotation
+from .utils import import_class
+from django_zipkin_http import defaults as settings
+from .zipkin_data import ZipkinData
+from .span.annotation import Annotation
+from .span.binary_annotation import BinaryAnnotation
 
 
 class BaseDataStore(object):

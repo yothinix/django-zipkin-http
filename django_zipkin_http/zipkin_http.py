@@ -1,6 +1,6 @@
 import logging
 import requests
-from defaults import ZIPKIN_HTTP_HOST, ZIPKIN_HTTP_API, ZIPKIN_HTTP_SPAN
+from .defaults import ZIPKIN_HTTP_HOST, ZIPKIN_HTTP_API, ZIPKIN_HTTP_SPAN
 
 
 class HTTPReporter:
@@ -15,7 +15,7 @@ class HTTPReporter:
             return r.status_code, r.text
         else:
             raise Exception("Error occured when reporting to zipkin:", r.text)
-            
+
 
     def _send_span(self, json_input):
         url = self.host + ZIPKIN_HTTP_API + ZIPKIN_HTTP_SPAN

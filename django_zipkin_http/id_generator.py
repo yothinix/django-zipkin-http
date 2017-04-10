@@ -1,8 +1,8 @@
 import random
 
-from zipkin_data import ZipkinId
-from utils import import_class
-import defaults as settings
+from .zipkin_data import ZipkinId
+from .utils import import_class
+from django_zipkin_http import defaults as settings
 
 
 class BaseIdGenerator(object):

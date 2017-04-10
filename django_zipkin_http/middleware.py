@@ -9,6 +9,7 @@ from .api import api as default_api
 from django_zipkin_http import constants
 from django_zipkin_http import defaults as settings
 from django_zipkin_http import zipkin_http
+from django.utils.deprecation import MiddlewareMixin
 
 
 if django.VERSION[0] == 1 and django.VERSION[1] < 5:
@@ -46,12 +47,13 @@ class ZipkinDjangoRequestParser(object):
         )
 
 
-class ZipkinMiddleware(object):
-    def __init__(self, store=None, api=None):
+class ZipkinMiddleware(MiddlewareMixin):
+    def __init__(self, store=None, api=None, get_response=None):
         self.store = store or default_data_store
         self.request_parser = ZipkinDjangoRequestParser()
         self.id_generator = SimpleIdGenerator()
         self.api = api or default_api
+        self.get_response = get_response
 
     def process_request(self, request):
         try:
